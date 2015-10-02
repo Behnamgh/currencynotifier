@@ -1,0 +1,26 @@
+{
+  "name": "behnam.ir",
+  "version": "1.0.0",
+  "description": "",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Behnamgh/Behnam.git"
+  },
+  "author": "Behnamgh",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Behnamgh/Behnam/issues"
+  },
+  "homepage": "https://github.com/Behnamgh/Behnam#readme",
+  "dependencies": {
+    "cheerio": "^0.19.0",
+    "extend": "2.0.1",
+    "request": "^2.64.0",
+    "telegram-api": "^0.5.22"
+    }
+}
