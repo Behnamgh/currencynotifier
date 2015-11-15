@@ -15,6 +15,7 @@ var bot = new Bot({
 bot.start();
 console.log("the server is started");
 
+
 function msg() {
   return new Message().keyboard(kb);
 }
@@ -68,7 +69,7 @@ bot.get(/euro|Euro/, function(message) {
         var $ = cheerio.load(body);
         var $$ = cheerio.load($('.hotPrice').eq(1).html());
         euro_2 = $$('.odd .second span').eq(0).text();
-        var answer = new Message().text('Dollar rate:\narzlive: ' + euro + '\nfibazar: ' + euro_1 + '\neranico: ' + euro_2.substring(0, 6)).to(message.chat.id);
+        var answer = new Message().text('Euro rate:\narzlive: ' + euro + '\nfibazar: ' + euro_1 + '\neranico: ' + euro_2.substring(0, 6)).to(message.chat.id);
         bot.send(answer);
         console.log(message.from.first_name + ' attempt for dollar and number of euro request is : ' + eurocount);
       });
