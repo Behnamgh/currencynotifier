@@ -4,9 +4,14 @@ var Keyboard = require('telegram-api/types/Keyboard');
 var File = require('telegram-api/types/File');
 var cheerio = require('cheerio');
 var request = require('request');
+var User = require("./models/user");
+var mongoose = require('mongoose');
+
+mongoose.connect("mongodb://behnam:locked@ds049288.mongolab.com:49288/behnam"); // connect to our database
+
 const kb = new Keyboard().keys([
-  ["Dollar"],
-  ["Euro"]
+  ["yes"],
+  ["no"]
 ]);
 var bot = new Bot({
   token: '127393459:AAH5mRJGfGGasENu4TLMyrSN2H6ZE56tAxE'
@@ -23,10 +28,40 @@ function msg() {
 function Filemsg() {
   return new File().keyboard(kb);
 }
-var dollarcount = 0;
-var eurocount = 0;
 
+bot.command('start', function(message) {
+  var start = new msg().text('Hi\nthis robot belong to confirm your account of your coolest game ever\ndo you wanna register to this game?').to(message.chat.id);
+  bot.send(start);
+  console.log(message.from.id);
+});
+bot.get(/yes/i, function(message) {
+  var answer = new Message().text('ok choose your nickname like this:\n/nickname:example').to(message.chat.id);
+  bot.send(answer);
+});
+bot.command('nickname', function(message) {
+  var check = new msg().text('let me check that check your availability of your nickname').to(message.chat.id);
+  bot.send(check);
 
+  var nick = message.text.substring(10);
+  var rand = Math.floor((Math.random() * 100) + 54);
+
+  var newUser = new User();
+  newUser.nickname = nick;
+  newUser.randomkey = rand;
+
+  newUser.save(function(err) {
+        if (err) {
+          console.error(err);
+          return;
+        }
+        var start = new msg().text(rand).to(message.chat.id);
+        bot.send(start);
+        request('https://api.telegram.org/bot127367067:AAH7oUB3iKXC9SwH9jrGMjJ_pnxjhsAD1E0/sendMessage?chat_id=110176673&text= ' + nick + " register kard ba code:  " + rand , function(error, response, body) {
+                });
+      });
+});
+
+/*
 
 bot.get(/Dollar|dollar|dollars|Dollars/, function(message) {
   ++dollarcount;
@@ -203,6 +238,8 @@ bot.command('start', function(message) {
   }
 });
 
+
+*/
 bot.get(/ */, function(message) {
   var welcome = new msg().text('Hi.\nMy name is currency notifier and my job is to notify you from rate of $ from three website\nArzlive.com\n2gheroon.ir\nAnd feebazar.ir\nat first we started with 2 currency.\njust dollar and euro.\nEnjoy it\nfor start click one of these item').to(message.chat.id);
   bot.send(welcome);
