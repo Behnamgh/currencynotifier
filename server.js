@@ -20,7 +20,6 @@ var bot = new Bot({
 bot.start();
 console.log("the server is started");
 
-
 function msg() {
   return new Message().keyboard(kb);
 }
