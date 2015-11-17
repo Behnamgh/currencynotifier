@@ -31,11 +31,31 @@ function Filemsg() {
 bot.command('start', function(message) {
   var start = new msg().text('Hi\nthis robot belong to confirm your account of your coolest game ever\ndo you wanna register to this game?').to(message.chat.id);
   bot.send(start);
-  console.log(message.from.id);
+  console.log(message.from);
 });
 bot.get(/yes/i, function(message) {
-  var answer = new Message().text('ok choose your nickname like this:\n/nickname:example').to(message.chat.id);
-  bot.send(answer);
+  User.findOne({
+    "telegramID": message.chat.username
+  }).exec(function(err, result) {
+    console.log(result);
+    User.update({
+                "telegramID": message.chat.username,
+                "registered": false
+              }, {
+                $set: {
+                  "chatID": message.chat.id
+                }
+              }, function(err) {
+                console.log(err);
+              });
+    if (!result.registered) {
+      var answer = new Message().text('your registration code is ' + result.randomkey).to(message.chat.id);
+      bot.send(answer);
+    } else {
+      var answer = new Message().text('your registration done in past').to(message.chat.id);
+      bot.send(answer);
+    }
+  })
 });
 bot.command('nickname', function(message) {
   var check = new msg().text('let me check that check your availability of your nickname').to(message.chat.id);
@@ -49,15 +69,14 @@ bot.command('nickname', function(message) {
   newUser.randomkey = rand;
 
   newUser.save(function(err) {
-        if (err) {
-          console.error(err);
-          return;
-        }
-        var start = new msg().text(rand).to(message.chat.id);
-        bot.send(start);
-        request('https://api.telegram.org/bot127367067:AAH7oUB3iKXC9SwH9jrGMjJ_pnxjhsAD1E0/sendMessage?chat_id=110176673&text= ' + nick + " register kard ba code:  " + rand , function(error, response, body) {
-                });
-      });
+    if (err) {
+      console.error(err);
+      return;
+    }
+    var start = new msg().text(rand).to(message.chat.id);
+    bot.send(start);
+    request('https://api.telegram.org/bot127367067:AAH7oUB3iKXC9SwH9jrGMjJ_pnxjhsAD1E0/sendMessage?chat_id=110176673&text= ' + nick + " register kard ba code:  " + rand, function(error, response, body) {});
+  });
 });
 
 /*
