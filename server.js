@@ -37,23 +37,32 @@ bot.get(/yes/i, function(message) {
   User.findOne({
     "telegramID": message.chat.username
   }).exec(function(err, result) {
-    console.log(result);
-    User.update({
-                "telegramID": message.chat.username,
-                "registered": false
-              }, {
-                $set: {
-                  "chatID": message.chat.id
-                }
-              }, function(err) {
-                console.log(err);
-              });
-    if (!result.registered) {
-      var answer = new Message().text('your registration code is ' + result.randomkey).to(message.chat.id);
+    if (!result) {
+      var answer = new Message().text('ID shoma mojood nemibashad').to(message.chat.id);
       bot.send(answer);
     } else {
-      var answer = new Message().text('your registration done in past').to(message.chat.id);
-      bot.send(answer);
+
+      console.log(result);
+      /*
+      User.update({
+                  "telegramID": message.chat.username,
+                  "registered": false
+                }, {
+                  $set: {
+                    "chatID": message.chat.id
+                  }
+                }, function(err) {
+                  console.log(err);
+                });
+                */
+
+      if (result.registered) {
+        var answer = new Message().text('your registration done before').to(message.chat.id);
+        bot.send(answer);
+      } else {
+        var answer = new Message().text('your registration code is ' + result.randomkey).to(message.chat.id);
+        bot.send(answer);
+      }
     }
   })
 });
